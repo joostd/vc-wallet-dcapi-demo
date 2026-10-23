@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      FlutterFragmentActivity's transparent background mode needs a genuinely
+      translucent window; the stock Theme.Translucent.NoTitleBar is not a
+      Material parent and mishandles the status bar here.
+    -->
+    <style name="FlutterWalletTranslucentTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>

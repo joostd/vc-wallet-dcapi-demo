@@ -1,0 +1,42 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application>
+        <!--
+          Declared here rather than in the host app, so integrating the plugin
+          needs no manifest edits: manifest merging folds this into whatever
+          app depends on it.
+
+          Translucent because the system launches it on top of its own
+          credential picker; the activity draws nothing itself.
+        -->
+        <activity
+            android:name="dev.digitalcredentials.flutter_wallet.getcred.GetCredentialActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="androidx.credentials.registry.provider.action.GET_CREDENTIAL" />
+                <!-- Older Chrome and Play services still send this one. -->
+                <action android:name="androidx.identitycredentials.action.GET_CREDENTIALS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          The one activity that draws its own UI, so the one hosted by
+          Flutter. Needs a theme with a translucent window, since
+          BackgroundMode.transparent draws over the browser beneath.
+        -->
+        <activity
+            android:name="dev.digitalcredentials.flutter_wallet.createcred.CreateCredentialActivity"
+            android:exported="true"
+            android:theme="@style/FlutterWalletTranslucentTheme">
+            <intent-filter>
+                <action android:name="androidx.credentials.registry.provider.action.CREATE_CREDENTIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
