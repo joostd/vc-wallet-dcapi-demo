@@ -90,3 +90,21 @@ rejects the device signature.
 **The issued credential must be bound to the key you attested.** The wallet
 checks this at issuance time, because the alternative is discovering it much
 later as an unexplained "device signature invalid".
+
+## License and attribution
+
+Apache License 2.0 — see [LICENSE](LICENSE).
+
+Derived from [CMWallet](https://github.com/digitalcredentialsdev/CMWallet),
+the Android Digital Credentials sample wallet, which is Apache-2.0 licensed.
+Two files are taken from it byte for byte:
+
+- `android/src/main/assets/provision_hardcoded.wasm` — the issuance matcher
+  Play services runs to decide whether this wallet can accept an offer.
+- `android/src/main/assets/apps.json` — the browser allowlist `getOrigin()`
+  consults.
+
+The Kotlin is a reimplementation rather than a copy, but follows CMWallet's
+structure closely where the protocols leave no choice: the DCQL matching, the
+`OpenID4VPDCAPIHandover` session transcript, and the mdoc `IssuerSigned`
+handling.
