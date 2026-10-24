@@ -111,6 +111,13 @@ data class CredentialConfigurationMDoc(
     @SerialName("credential_metadata") override val credentialMetadata: CredentialMetadata? = null,
     @SerialName("doctype") val doctype: String,
     @SerialName("scope") val scope: String? = null,
+    /**
+     * Claims as issuers that do *not* nest them under `credential_metadata`
+     * emit them — digital-credentials.dev is one. Both shapes occur in the
+     * wild, and since the parser ignores unknown keys, reading only one means
+     * the other is dropped in silence.
+     */
+    @SerialName("claims") val claims: List<Claim>? = null,
 ) : CredentialConfiguration()
 
 /**
@@ -129,12 +136,18 @@ data class CredentialConfigurationUnknownFormat(
  * Shared deliberately: the registry entry, the host-facing projection and
  * the issuance preview must all agree, or the same claim is named three
  * different ways in three different screens.
+ *
+ * Checks both places a claim list can live. Reading only `credential_metadata`
+ * meant every credential from an issuer using the top-level shape showed raw
+ * element ids, with nothing logged to say why.
  */
-fun CredentialConfigurationMDoc.displayNameFor(namespace: String, element: String): String =
-    credentialMetadata?.claims
+fun CredentialConfigurationMDoc.displayNameFor(namespace: String, element: String): String {
+    fun label(from: List<Claim>?) = from
         ?.firstOrNull { it.path.size >= 2 && it.path[0] == namespace && it.path[1] == element }
         ?.display?.firstOrNull()?.name
-        ?: element
+
+    return label(credentialMetadata?.claims) ?: label(claims) ?: element
+}
 
 object CredentialConfigurationSerializer :
     JsonContentPolymorphicSerializer<CredentialConfiguration>(CredentialConfiguration::class) {
