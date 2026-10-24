@@ -44,6 +44,10 @@ class IssuanceOffer {
 class IssuanceSheet extends StatefulWidget {
   const IssuanceSheet({super.key});
 
+  /// The route the credential-provider activity starts its engine on. A host
+  /// must make this resolve to [IssuanceSheet], or issuance silently hangs.
+  static const String route = '/create';
+
   @override
   State<IssuanceSheet> createState() => _IssuanceSheetState();
 }
