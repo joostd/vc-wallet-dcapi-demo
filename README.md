@@ -54,15 +54,20 @@ Verified end to end on a Pixel 8a (Android 17) against
 | Issuance | hardware-attested key proof, credential stored |
 | Issued credential, presented | all six pass with a KeyStore device key |
 
+**Both response modes.** `dc_api` returns the `vp_token` as JSON; `dc_api.jwt`
+encrypts it to the verifier's P-256 key with ECDH-ES and A128GCM or A256GCM.
+HAIP 1.0 requires the encrypted one, so verifiers built on it — the EUDI
+reference verifier among them — ask for nothing else.
+
 **Android only.** The credential provider APIs have no equivalent elsewhere,
 and the plugin deliberately has no platform-interface indirection.
 
 Deliberately out of scope, each a localized add-back rather than a rewrite:
 
 - **SD-JWT.** mdoc only.
-- **Signed and multisigned requests** (`openid4vp-v1-signed`, `-multisigned`)
-  and **encrypted responses** (`dc_api.jwt`). Real verifiers do use these; the
-  JWS/JWE helpers are in CMWallet's `Utils.kt` if they are needed.
+- **Signed and multisigned requests** (`openid4vp-v1-signed`, `-multisigned`).
+  Real verifiers do use these; the JWS helpers are in CMWallet's `Utils.kt`
+  if they are needed.
 - **The authorization-code grant, PAR, client attestation, DPoP, batch
   issuance.** The pre-authorized code flow is what issuers in this ecosystem
   actually use, and they accept a plain bearer token.
