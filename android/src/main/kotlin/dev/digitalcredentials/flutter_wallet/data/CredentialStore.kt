@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.security.KeyStore
 
 private val CREDENTIAL_LIST = ListSerializer(CredentialItem.serializer())
 
@@ -70,8 +71,31 @@ class CredentialStore(private val context: Context) {
         Log.i(TAG, "stored ${items.size} credential(s)")
     }
 
+    /**
+     * Forget a credential, and the hardware keys minted for it.
+     *
+     * The key would outlive the credential otherwise: its alias is recorded
+     * nowhere else, so it would sit in the KeyStore for the life of the
+     * install, unusable and uncountable.
+     */
     fun remove(id: String) {
+        val removed = get(id)
         persist(_credentials.value.filterNot { it.id == id })
+        removed?.credentials
+            ?.mapNotNull { (it.key as? CredentialKeyHardware)?.keyAlias }
+            ?.forEach(::deleteKey)
+        Log.i(TAG, "removed credential $id")
+    }
+
+    private fun deleteKey(alias: String) {
+        try {
+            KeyStore.getInstance("AndroidKeyStore").apply { load(null) }.deleteEntry(alias)
+            Log.i(TAG, "deleted key $alias")
+        } catch (e: Exception) {
+            // The credential is already gone from the store, and a key that
+            // will not delete is no reason to put it back.
+            Log.w(TAG, "could not delete key $alias", e)
+        }
     }
 
     fun get(id: String): CredentialItem? = _credentials.value.firstOrNull { it.id == id }
