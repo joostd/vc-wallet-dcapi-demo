@@ -108,8 +108,11 @@ Apache License 2.0 — see [LICENSE](LICENSE).
 
 Derived from [CMWallet](https://github.com/digitalcredentialsdev/CMWallet),
 the Android Digital Credentials sample wallet, which is Apache-2.0 licensed.
-Two files are taken from it byte for byte:
+Three files are taken from it byte for byte:
 
+- `LICENSE` — CMWallet's, tracked rather than adapted, down to the unfilled
+  `Copyright [yyyy] [name of copyright owner]` line it also carries. If
+  upstream's licence changes, copy it again; do not edit this one in place.
 - `android/src/main/assets/provision_hardcoded.wasm` — the issuance matcher
   Play services runs to decide whether this wallet can accept an offer.
 - `android/src/main/assets/apps.json` — the browser allowlist `getOrigin()`
