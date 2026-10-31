@@ -77,6 +77,12 @@ Deliberately out of scope, each a localized add-back rather than a rewrite:
 
 ## Notes for anyone extending it
 
+**Test credentials without an issuer.** `tools/eudi_to_wallet.py` converts an
+mdoc from an [eudi-dev](https://github.com/eudi-dev/eudi-dev) wallet into the
+store format, key included, so `eudi issue mdoc --wallet --doc-type …` becomes
+a source of any doctype you like. Software-keyed, so it says nothing about
+hardware binding — it is for exercising matching, labels and verifiers.
+
 **There is no presentation UI to write.** Play services draws the credential
 picker from the registry, so `GetCredentialActivity` has no layout — it builds
 a response, shows a biometric prompt and returns. The only UI the wallet owns
